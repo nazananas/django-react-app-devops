@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: app
+data:
+  DEBUG: "0"
+  ALLOWED_HOSTS: "localhost,127.0.0.1,backend"
+  CSRF_TRUSTED_ORIGINS: "http://localhost,http://127.0.0.1"
+  DATABASE_URL: "postgres://appuser:strongpassword123@postgres:5432/appdb"
