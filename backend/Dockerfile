@@ -1,23 +1,33 @@
-FROM python:3.11-slim
-
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+FROM python:3.11-slim AS builder
 
 WORKDIR /app
 
 RUN apt-get update && \
-    apt-get install -y netcat-openbsd gcc postgresql-client libpq-dev && \
+    apt-get install -y --no-install-recommends gcc python3-dev && \
     rm -rf /var/lib/apt/lists/*
 
-RUN python -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
-
 COPY requirements.txt .
-RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN pip install --user -r requirements.txt
 
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY --from=builder /root/.local /root/.local
 COPY . .
 
-COPY entrypoint.sh /app/entrypoint.sh
+# for best practice, specify environment variables
+ENV PATH="/root/.local/bin:$PATH"
+ENV PYTHONUNBUFFERED=1
+ENV DJANGO_SETTINGS_MODULE=app.settings
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends libpq5 && \
+    rm -rf /var/lib/apt/lists/*
+
 RUN chmod +x /app/entrypoint.sh
 
+EXPOSE 8000
+
 ENTRYPOINT ["/app/entrypoint.sh"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "4", "app.wsgi:application"]

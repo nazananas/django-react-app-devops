@@ -2,26 +2,39 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 export const getRequestHeaders = () => {
-  const headers: { [key: string]: string } = {};
+  const headers: Record<string, string> = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  };
 
-  // Add CSRF token header
-  const CSRFToken = Cookies.get('csrftoken') || '';
-  headers['X-CSRFToken'] = CSRFToken;
+  const csrf = Cookies.get('csrftoken');
+  if (csrf) {
+    headers['X-CSRFToken'] = csrf;
+  }
 
   return headers;
 };
 
 export const request = (
   url: string,
-  { data = {}, method = 'get', headers = {} } = {}
+  {
+    data,
+    method = 'get',
+    headers = {},
+  }: {
+    data?: unknown;
+    method?: 'get' | 'post' | 'put' | 'patch' | 'delete';
+    headers?: Record<string, string>;
+  } = {}
 ) => {
   return axios({
+    url,
+    method,
+    data,
     headers: {
       ...getRequestHeaders(),
       ...headers,
     },
-    url,
-    data,
-    method,
+    withCredentials: true,
   });
 };

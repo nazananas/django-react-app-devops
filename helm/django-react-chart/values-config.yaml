@@ -1,0 +1,4 @@
+controller:
+  publishService:
+    enabled: true
+  progressDeadlineSeconds: 600

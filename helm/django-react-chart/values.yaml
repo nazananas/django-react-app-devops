@@ -1,0 +1,28 @@
+configmap:
+  debug: "true"
+  allowed_hosts: "nazananas.pp.ua"
+  db_host: "postgres"
+  db_port: "5432"
+  postgres_db: "appdb"
+  cors_allowed: "http://nazananas.pp.ua"
+  csrf_trusted: "http://nazananas.pp.ua"
+  cors_allow_credentials: "true"
+  csrf_cookie_httponly: "false"
+
+backend:
+  replicaCount: 3
+  image:
+    repository: nazananas/django-backend
+    tag: "v2.6"
+  
+frontend:
+  replicaCount: 3
+  image:
+    repository: nazananas/react-ts-frontend
+    tag: "v2.5"
+
+postgres:
+  replicaCount: 3
+  image:
+    repository: postgres
+    tag: "15"

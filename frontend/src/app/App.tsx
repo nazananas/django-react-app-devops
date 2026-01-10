@@ -8,10 +8,19 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import { WithUserData } from '@app';
-
 import { DashboardPage, LoginPage, SignupPage } from '@pages';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 0,
+      gcTime: 0,
+      refetchOnMount: 'always',
+      refetchOnWindowFocus: true,
+      retry: false,
+    },
+  },
+});
 
 const App = () => {
   return (
@@ -22,7 +31,6 @@ const App = () => {
             <Route path="/" element={<DashboardPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
-            {/* Redirect to login page if no route matches */}
             <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         </Router>

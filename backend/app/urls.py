@@ -21,10 +21,13 @@ from django.views.generic import TemplateView
 
 
 urlpatterns = [
-    # Admin
+    path("healthz/", health_check),
     path("admin/", admin.site.urls),
-    # API
+
+    # API (both with and without prefix)
     path("api/users/", include("users.urls")),
+    path("users/", include("users.urls")),
+
     # Frontend
-    re_path(r"^.*", TemplateView.as_view(template_name="index.html")),
+    re_path(r"^.*$", TemplateView.as_view(template_name="index.html")),
 ]

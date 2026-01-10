@@ -1,13 +1,20 @@
-import React from 'react';
+import { ReactNode } from 'react';
+import { useUserQuery } from '@hooks/users';
 
-import { useUserQuery } from '@hooks';
-
-const WithUserData = ({ children }: React.PropsWithChildren) => {
-  const { isSuccess } = useUserQuery();
-  if (!isSuccess) {
-    return null;
-  }
-  return children;
+type Props = {
+  children: ReactNode;
 };
 
-export default WithUserData;
+export default function WithUserData({ children }: Props) {
+  const { isLoading, isError } = useUserQuery();
+
+  if (isLoading) {
+    return <div className="text-white p-4">Loading...</div>;
+  }
+
+  if (isError) {
+    return <>{children}</>;
+  }
+
+  return <>{children}</>;
+}

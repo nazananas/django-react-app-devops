@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: app
+data:
+  DEBUG: {{ .Values.configmap.debug | quote }}
+  ALLOWED_HOSTS: {{ .Values.configmap.allowed_hosts | quote }}
+  DB_HOST: {{ .Values.configmap.db_host | quote }}
+  DB_PORT: {{ .Values.configmap.db_port | quote }}
+  POSTGRES_DB: {{ .Values.configmap.postgres_db }}
+  CORS_ALLOWED_ORIGINS: {{ .Values.configmap.cors_allowed | quote }}
+  CSRF_TRUSTED_ORIGINS: {{ .Values.configmap.csrf_trusted | quote }}
+  CORS_ALLOW_CREDENTIALS: {{ .Values.configmap.cors_allow_credentials | quote }}
+  CSRF_COOKIE_HTTPONLY: {{ .Values.configmap.csrf_cookie_httponly | quote }}
